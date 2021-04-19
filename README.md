@@ -1,4 +1,4 @@
-# PTCGPlayerBoard
+# PTCG Player Board
 
 ![](ptcg-player-board-icon.png)
 
