@@ -3,10 +3,8 @@ import XCTest
 
 final class PTCGPlayerBoardTests: XCTestCase {
     func testExample() {
-        // This is an example of a functional test case.
-        // Use XCTAssert and related functions to verify your tests produce the correct
-        // results.
         XCTAssertEqual(PTCGPlayerBoard().text, "Hello, World!")
+        XCTAssertEqual(PTCGPlayerBoard().sandbox().currentHitPoint, 0)
     }
 
     static var allTests = [

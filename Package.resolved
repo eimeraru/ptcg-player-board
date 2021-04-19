@@ -1,0 +1,43 @@
+{
+  "object": {
+    "pins": [
+      {
+        "package": "PTCGBattlePokemon",
+        "repositoryURL": "https://github.com/evdwarf/ptcg-battle-pokemon",
+        "state": {
+          "branch": null,
+          "revision": "b9002b4a305cd59f95e6efb27b635e410a4726b0",
+          "version": "0.0.3"
+        }
+      },
+      {
+        "package": "PTCGCard",
+        "repositoryURL": "https://github.com/evdwarf/ptcg-card",
+        "state": {
+          "branch": null,
+          "revision": "1d739104e26af8b5e1f3d06bf52a01fc0b8e8922",
+          "version": "0.0.7"
+        }
+      },
+      {
+        "package": "PTCGEnergy",
+        "repositoryURL": "https://github.com/evdwarf/ptcg-energy.git",
+        "state": {
+          "branch": null,
+          "revision": "ad752c15713ea0ad2f1bc63695ff1b3cc396657d",
+          "version": "0.0.2"
+        }
+      },
+      {
+        "package": "PTCGSpecialConditions",
+        "repositoryURL": "https://github.com/evdwarf/ptcg-special-conditions",
+        "state": {
+          "branch": null,
+          "revision": "d616d698abf2bb674a03f43894e131982b3f1e7a",
+          "version": "0.0.4"
+        }
+      }
+    ]
+  },
+  "version": 1
+}
