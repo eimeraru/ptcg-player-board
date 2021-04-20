@@ -55,7 +55,7 @@ public struct PTCGPlayerBoard: PTCGZoneControllable {
      *「たねポケモン」が1枚以上引けるまで再帰的に処理を実行する
      * - Parameters:
      *  - settingCount: 初期値は1から
-     * - Returns: 手札を準備するのに試行した回数、初回準備のあと相手に試行回数分をドローさせる
+     * - Returns: 手札を準備する際に引き直した回数、初回準備のあと回数分を相手にドローさせる
      */
     public mutating func gameStart(_ settingCount: Int = 1) -> Int {
         deck.cards = deckSet.cards.shuffled()
@@ -63,7 +63,7 @@ public struct PTCGPlayerBoard: PTCGZoneControllable {
             (zone: deck, request: .draw(count: startHandsCount)),
             to: (zone: hands, request: ()))
         let basicPokemons = unitSet.compactMap { (unit) -> PTCGPokemonCard? in
-            mapCard(unit) { $0.evolutionType == .basic }
+            mapToCard(unit) { $0.evolutionType == .basic }
         }
         guard basicPokemons.count > 0 else {
             _ = transit((zone: hands, request: .selectAll),
@@ -73,10 +73,14 @@ public struct PTCGPlayerBoard: PTCGZoneControllable {
         return settingCount
     }
     
+    /** サイドを準備する際に発生するエラー */
     public enum PreparePrizeError: Error {
+        /** デッキの準備が出来てない場合に発生 */
         case shouldSettingDeck
+        /** 既にゲームが開始している場合に発生 */
         case alreadyStartGame
     }
+    /** サイドに指定枚数のカードをデッキから裏向きに設置する */
     public mutating func preparePrize() throws {
         guard hands.cards.count == startHandsCount else {
             throw PreparePrizeError.shouldSettingDeck
@@ -89,7 +93,7 @@ public struct PTCGPlayerBoard: PTCGZoneControllable {
             to: (zone: prize, request: ()))
     }
     
-    private func mapCard<T: PTCGCard>(
+    private func mapToCard<T: PTCGCard>(
         _ unit: PTCGZoneUnitConvertible,
         filter: (T) -> Bool) -> T?
     {
