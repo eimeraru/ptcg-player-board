@@ -43,14 +43,14 @@ extension PTCGHandsZone: PTCGZoneConvertible {
     }
     
     public enum OutputAction {
-        case `return`(count: Int)
+        case selectAll
     }
     public typealias OutputRequest = OutputAction
     public mutating func output(_ request: OutputRequest) -> Array<PTCGZoneUnitConvertible> {
         switch request {
-        case .return(let count):
-            let cards = Array(self.cards[0 ..< count])
-            self.cards.removeFirst(count)
+        case .selectAll:
+            let cards = self.cards
+            self.cards = []
             return cards
         }
     }

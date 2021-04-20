@@ -41,8 +41,9 @@ extension PTCGDeckZone: PTCGZoneConvertible {
     public mutating func output(_ request: OutputAction) -> Array<PTCGZoneUnitConvertible> {
         switch request {
         case .draw(count: let count):
-            self.cards.removeFirst(count)
-            return Array(self.cards[0 ..< count])
+            let cards = Array(self.cards[0 ..< count])
+            self.cards.removeSubrange(0 ..< count)
+            return cards
         }
     }
 }

@@ -31,7 +31,15 @@ extension PTCGPrizeZone: PTCGZoneConvertible {
     
     public typealias InputRequest = Void
     public mutating func input(_ request: Void, of cards: Array<PTCGZoneUnitConvertible>) {
-        
+        let deckCards = cards.map { (card) -> Array<PTCGDeckCard> in
+            switch card.switcher {
+            case .deckCard(let unit):
+                return [unit]
+            case .battlePokemon(let unit):
+                return unit.evolutionTree + unit.items + unit.energies
+            }
+        }.flatMap { $0 }
+        self.cards.append(contentsOf: deckCards)
     }
     
     public typealias OutputRequest = Void
