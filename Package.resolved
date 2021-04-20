@@ -2,21 +2,12 @@
   "object": {
     "pins": [
       {
-        "package": "PTCGBattlePokemon",
-        "repositoryURL": "https://github.com/evdwarf/ptcg-battle-pokemon",
-        "state": {
-          "branch": null,
-          "revision": "b9002b4a305cd59f95e6efb27b635e410a4726b0",
-          "version": "0.0.3"
-        }
-      },
-      {
         "package": "PTCGCard",
         "repositoryURL": "https://github.com/evdwarf/ptcg-card",
         "state": {
           "branch": null,
-          "revision": "1d739104e26af8b5e1f3d06bf52a01fc0b8e8922",
-          "version": "0.0.7"
+          "revision": "d1535f6c73615ea0327c9ca22c3917647a4e213c",
+          "version": "0.0.9"
         }
       },
       {

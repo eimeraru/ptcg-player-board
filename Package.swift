@@ -12,14 +12,17 @@ let package = Package(
             targets: ["PTCGPlayerBoard"]),
     ],
     dependencies: [
-        .package(name: "PTCGBattlePokemon", url: "https://github.com/evdwarf/ptcg-battle-pokemon", from: "0.0.3"),
+        .package(name: "PTCGCard",
+                 url: "https://github.com/evdwarf/ptcg-card",
+                 from: "0.0.9"),
+        .package(name: "PTCGSpecialConditions",
+                 url: "https://github.com/evdwarf/ptcg-special-conditions",
+                 from: "0.0.4"),
     ],
     targets: [
-        // Targets are the basic building blocks of a package. A target can define a module or a test suite.
-        // Targets can depend on other targets in this package, and on products in packages this package depends on.
         .target(
             name: "PTCGPlayerBoard",
-            dependencies: ["PTCGBattlePokemon"]),
+            dependencies: ["PTCGCard", "PTCGSpecialConditions"]),
         .testTarget(
             name: "PTCGPlayerBoardTests",
             dependencies: ["PTCGPlayerBoard"]),
