@@ -31,11 +31,27 @@ extension PTCGHandsZone: PTCGZoneConvertible {
     
     public typealias InputRequest = Void
     public mutating func input(_ request: Void, of cards: Array<PTCGZoneUnitConvertible>) {
-        
+        let deckCards = cards.map { (card) -> Array<PTCGDeckCard> in
+            switch card.switcher {
+            case .deckCard(let unit):
+                return [unit]
+            case .battlePokemon(let unit):
+                return unit.evolutionTree + unit.items + unit.energies
+            }
+        }.flatMap { $0 }
+        self.cards.append(contentsOf: deckCards)
     }
     
-    public typealias OutputRequest = Void
-    public mutating func output(_ request: Void) -> Array<PTCGZoneUnitConvertible> {
-        []
+    public enum OutputAction {
+        case `return`(count: Int)
+    }
+    public typealias OutputRequest = OutputAction
+    public mutating func output(_ request: OutputRequest) -> Array<PTCGZoneUnitConvertible> {
+        switch request {
+        case .return(let count):
+            let cards = Array(self.cards[0 ..< count])
+            self.cards.removeFirst(count)
+            return cards
+        }
     }
 }

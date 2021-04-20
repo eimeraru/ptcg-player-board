@@ -59,7 +59,7 @@ extension PTCGZoneControllable {
     mutating func transit<T: PTCGZoneConvertible, S: PTCGZoneConvertible>
     (
         _ lhs: (zone: T, request: T.OutputRequest),
-        to rhs: (zone: S, request: S.InputRequest))
+        to rhs: (zone: S, request: S.InputRequest)) -> Array<PTCGZoneUnitConvertible>
     {
         var lhs = lhs
         let outputted = lhs.zone.output(lhs.request)
@@ -67,6 +67,7 @@ extension PTCGZoneControllable {
         var rhs = rhs
         rhs.zone.input(rhs.request, of: outputted)
         update(with: rhs.zone)
+        return outputted
     }
     
     mutating func update<T: PTCGZoneConvertible>(with zone: T) {

@@ -34,8 +34,15 @@ extension PTCGDeckZone: PTCGZoneConvertible {
         
     }
     
-    public typealias OutputRequest = Void
-    public mutating func output(_ request: Void) -> Array<PTCGZoneUnitConvertible> {
-        []
+    public enum OutputAction {
+        case draw(count: Int)
+    }
+    public typealias OutputRequest = OutputAction
+    public mutating func output(_ request: OutputAction) -> Array<PTCGZoneUnitConvertible> {
+        switch request {
+        case .draw(count: let count):
+            self.cards.removeFirst(count)
+            return Array(self.cards[0 ..< count])
+        }
     }
 }

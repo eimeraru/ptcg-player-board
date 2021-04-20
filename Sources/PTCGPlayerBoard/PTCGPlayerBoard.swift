@@ -49,6 +49,32 @@ public struct PTCGPlayerBoard: PTCGZoneControllable {
         self.deckSet = deckSet
     }
     
+    /**
+     * ゲームを開始
+     */
+    public mutating func gameStart(_ settingCount: Int = 1) -> Int {
+        deck.cards = deckSet.cards.shuffled()
+        let basicPokemons = transit(
+            (zone: deck, request: .draw(count: startHandsCount)), to: (zone: hands, request: ())
+        ).compactMap { (unit: PTCGZoneUnitConvertible) -> PTCGPokemonCard? in
+            switch unit.switcher {
+            case .deckCard(let card):
+                guard let p = card.content as? PTCGPokemonCard, p.evolutionType == .basic else {
+                    return nil
+                }
+                return p
+            default:
+                return nil
+            }
+        }
+        guard basicPokemons.count > 0 else {
+            _ = transit((zone: hands, request: .return(count: startHandsCount)),
+                        to: (zone: deck, request: ()))
+            return gameStart(settingCount + 1)
+        }
+        return settingCount
+    }
+    
     // MARK: PTCGZoneControllable
     
     /** デッキ */
