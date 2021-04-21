@@ -30,7 +30,7 @@ extension PTCGBattleActiveZone: PTCGZoneConvertible {
     }
     
     public typealias InputRequest = Void
-    public mutating func input(_ request: Void, of cards: Array<PTCGZoneUnitConvertible>) {
+    public mutating func input(_ request: Void, of cards: Array<PTCGZoneUnitConvertible>) throws {
         guard let card = cards.first else {
             return
         }
@@ -43,7 +43,7 @@ extension PTCGBattleActiveZone: PTCGZoneConvertible {
     }
     
     public typealias OutputRequest = Void
-    public mutating func output(_ request: Void) -> Array<PTCGZoneUnitConvertible> {
+    public mutating func output(_ request: Void) throws -> Array<PTCGZoneUnitConvertible> {
         []
     }
 }

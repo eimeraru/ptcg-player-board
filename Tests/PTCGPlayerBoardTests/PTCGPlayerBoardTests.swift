@@ -12,15 +12,20 @@ final class PTCGPlayerBoardTests: XCTestCase {
     }
     
     func testGameStart() {
-        var playerBoard = PTCGPlayerBoard(deckSet: .init(cards: ExampleDeck))
-        print("Game start setting count: \(playerBoard.startGame())")
-        XCTAssertEqual(53, playerBoard.deck.cards.count)
-        XCTAssertEqual(7, playerBoard.hands.cards.count)
+        do {
+            var playerBoard = PTCGPlayerBoard(deckSet: .init(cards: ExampleDeck))
+            try playerBoard.startGame()
+            XCTAssertEqual(53, playerBoard.deck.cards.count)
+            XCTAssertEqual(7, playerBoard.hands.cards.count)
+        } catch {
+            XCTFail()
+        }
     }
     
     func testPreparePrize() {
+        
         var playerBoard = PTCGPlayerBoard(deckSet: .init(cards: ExampleDeck))
-        print("Game start setting count: \(playerBoard.startGame())")
+        try! playerBoard.startGame()
         try! playerBoard.preparePrize()
         XCTAssertEqual(47, playerBoard.deck.cards.count)
         XCTAssertEqual(7, playerBoard.hands.cards.count)
@@ -33,7 +38,7 @@ final class PTCGPlayerBoardTests: XCTestCase {
             XCTAssertEqual(shouldFailing, error as? PTCGPlayerBoard.PreparePrizeError)
         }
         playerBoard = PTCGPlayerBoard(deckSet: .init(cards: ExampleDeck))
-        print("Game start setting count: \(playerBoard.startGame())")
+        try! playerBoard.startGame()
         do {
             try playerBoard.preparePrize()
             try playerBoard.preparePrize()
@@ -45,9 +50,9 @@ final class PTCGPlayerBoardTests: XCTestCase {
     
     func testEntryPokemon() {
         var playerBoard = PTCGPlayerBoard(deckSet: .init(cards: ExampleDeck))
-        playerBoard.startGame()
+        try! playerBoard.startGame()
         try! playerBoard.preparePrize()
-        playerBoard.entryPokemon(0)
+        try! playerBoard.entryPokemon(0)
         XCTAssertEqual(6, playerBoard.hands.cards.count)
         XCTAssertNotNil(playerBoard.battleActive)
     }

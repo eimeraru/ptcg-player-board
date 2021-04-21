@@ -30,7 +30,7 @@ extension PTCGHandsZone: PTCGZoneConvertible {
     }
     
     public typealias InputRequest = Void
-    public mutating func input(_ request: Void, of cards: Array<PTCGZoneUnitConvertible>) {
+    public mutating func input(_ request: Void, of cards: Array<PTCGZoneUnitConvertible>) throws {
         let deckCards = cards.map { (card) -> Array<PTCGDeckCard> in
             switch card.switcher {
             case .deckCard(let unit):
@@ -47,7 +47,7 @@ extension PTCGHandsZone: PTCGZoneConvertible {
         case select(index: Int)
     }
     public typealias OutputRequest = OutputAction
-    public mutating func output(_ request: OutputRequest) -> Array<PTCGZoneUnitConvertible> {
+    public mutating func output(_ request: OutputRequest) throws -> Array<PTCGZoneUnitConvertible> {
         switch request {
         case .selectAll:
             let cards = self.cards

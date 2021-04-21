@@ -30,7 +30,7 @@ extension PTCGDeckZone: PTCGZoneConvertible {
     }
     
     public typealias InputRequest = Void
-    public mutating func input(_ request: Void, of cards: Array<PTCGZoneUnitConvertible>) {
+    public mutating func input(_ request: Void, of cards: Array<PTCGZoneUnitConvertible>) throws {
         
     }
     
@@ -38,7 +38,7 @@ extension PTCGDeckZone: PTCGZoneConvertible {
         case draw(count: Int)
     }
     public typealias OutputRequest = OutputAction
-    public mutating func output(_ request: OutputAction) -> Array<PTCGZoneUnitConvertible> {
+    public mutating func output(_ request: OutputAction) throws -> Array<PTCGZoneUnitConvertible> {
         switch request {
         case .draw(count: let count):
             let cards = Array(self.cards[0 ..< count])

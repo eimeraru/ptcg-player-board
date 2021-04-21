@@ -58,15 +58,15 @@ public struct PTCGPlayerBoard: PTCGZoneControllable {
      * - Returns: 手札を準備する際に引き直した回数、初回準備のあと回数分を相手にドローさせる
      */
     @discardableResult
-    public mutating func startGame(_ settingCount: Int = 1) -> Int {
+    public mutating func startGame(_ settingCount: Int = 1) throws -> Int {
         deck.cards = deckSet.cards
         shuffle()
-        let deckCards = draw(startHandsCount)
+        let deckCards = try draw(startHandsCount)
         let basicPokemons: Array<PTCGPokemonCard> = deckCards.compactMap(
             toCard(filter: { $0.evolutionType == .basic }))
         guard basicPokemons.count > 0 else {
-            returnHands()
-            return startGame(settingCount + 1)
+            try returnHands()
+            return try startGame(settingCount + 1)
         }
         return settingCount
     }
@@ -87,7 +87,7 @@ public struct PTCGPlayerBoard: PTCGZoneControllable {
         guard deck.cards.count == deckSet.cards.count - startHandsCount else {
             throw PreparePrizeError.alreadyStartGame
         }
-        _ = transit(
+        _ = try transit(
             (zone: deck, request: .draw(count: gamePrizeCount)),
             to: (zone: prize, request: ()))
     }
@@ -106,8 +106,8 @@ public struct PTCGPlayerBoard: PTCGZoneControllable {
      * - Parameters:
      *   - count: 引く枚数
      */
-    public mutating func draw(_ count: Int = 1) -> Array<PTCGDeckCard> {
-        transit((zone: deck, request: .draw(count: count)),
+    public mutating func draw(_ count: Int = 1) throws -> Array<PTCGDeckCard> {
+        try transit((zone: deck, request: .draw(count: count)),
                 to: (zone: hands, request: ())) as? Array<PTCGDeckCard> ?? []
     }
     
@@ -115,8 +115,8 @@ public struct PTCGPlayerBoard: PTCGZoneControllable {
      * 手札を山札に全て戻す
      */
     @discardableResult
-    public mutating func returnHands() -> Array<PTCGDeckCard> {
-        transit((zone: hands, request: .selectAll),
+    public mutating func returnHands() throws -> Array<PTCGDeckCard> {
+        try transit((zone: hands, request: .selectAll),
                 to: (zone: deck, request: ())) as? Array<PTCGDeckCard> ?? []
     }
     
@@ -132,8 +132,8 @@ public struct PTCGPlayerBoard: PTCGZoneControllable {
      * - Parameters:
      *   - index: 手札にいるポケモンカード
      */
-    public mutating func entryPokemon(_ index: Int) {
-        _ = transit((zone: hands, request: .select(index: index)),
+    public mutating func entryPokemon(_ index: Int) throws {
+        _ = try transit((zone: hands, request: .select(index: index)),
                     to: (zone: battleActive, request: ()))
     }
     

@@ -48,10 +48,10 @@ public protocol PTCGZoneConvertible {
     func read(_ request: ReadRequest) -> Array<PTCGZoneUnitConvertible>
     
     associatedtype InputRequest
-    mutating func input(_ request: InputRequest, of cards: Array<PTCGZoneUnitConvertible>)
+    mutating func input(_ request: InputRequest, of cards: Array<PTCGZoneUnitConvertible>) throws
     
     associatedtype OutputRequest
-    mutating func output(_ request: OutputRequest) -> Array<PTCGZoneUnitConvertible>
+    mutating func output(_ request: OutputRequest) throws -> Array<PTCGZoneUnitConvertible>
 }
 
 extension PTCGZoneControllable {
@@ -59,13 +59,13 @@ extension PTCGZoneControllable {
     mutating func transit<T: PTCGZoneConvertible, S: PTCGZoneConvertible>
     (
         _ lhs: (zone: T, request: T.OutputRequest),
-        to rhs: (zone: S, request: S.InputRequest)) -> Array<PTCGZoneUnitConvertible>
+        to rhs: (zone: S, request: S.InputRequest)) throws -> Array<PTCGZoneUnitConvertible>
     {
         var lhs = lhs
-        let outputted = lhs.zone.output(lhs.request)
+        let outputted = try lhs.zone.output(lhs.request)
         update(with: lhs.zone)
         var rhs = rhs
-        rhs.zone.input(rhs.request, of: outputted)
+        try rhs.zone.input(rhs.request, of: outputted)
         update(with: rhs.zone)
         return outputted
     }
