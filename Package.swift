@@ -14,7 +14,7 @@ let package = Package(
     dependencies: [
         .package(name: "PTCGCard",
                  url: "https://github.com/evdwarf/ptcg-card",
-                 from: "0.0.9"),
+                 from: "0.0.10"),
         .package(name: "PTCGSpecialConditions",
                  url: "https://github.com/evdwarf/ptcg-special-conditions",
                  from: "0.0.4"),

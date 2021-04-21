@@ -69,9 +69,14 @@ final class PTCGPlayerBoardTests: XCTestCase {
         try! playerBoard.battleActive.input(.attachEnergy, of: [basicEnergy])
         XCTAssertEqual(1, playerBoard.battleActive.battlePokemon?.energies.count)
         XCTAssertEqual(0, playerBoard.battleActive.battlePokemon?.items.count)
-//        let specialEnergy = PTCGDeckCard(
-//            with: .init(PTCGSpecialEnergyCard()), "_")
-//        XCTAssertEqual(2, playerBoard.battleActive.battlePokemon?.energies.count)
+        let specialEnergy = PTCGDeckCard(
+            with: .init(PTCGSpecialEnergyCard(
+                            id: "_",
+                            name: "トリプル加速エネルギー",
+                            energies: [.colorLess, .colorLess, .colorLess],
+                            capacity: 3)), "_")
+        try! playerBoard.battleActive.input(.attachEnergy, of: [specialEnergy])
+        XCTAssertEqual(2, playerBoard.battleActive.battlePokemon?.energies.count)
     }
     
     func testAttachItem() {
