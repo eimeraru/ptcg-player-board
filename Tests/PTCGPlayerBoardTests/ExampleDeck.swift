@@ -7,7 +7,7 @@
 
 import PTCGCard
 
-let basicPokemonCount = 1
+let basicPokemonCount = 60
 
 let basicMonsters: Array<AnyPTCGCard> = (0 ..< basicPokemonCount).map { _ in
     .init(PTCGPokemonCard(

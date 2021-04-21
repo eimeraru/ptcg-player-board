@@ -42,6 +42,14 @@ final class PTCGPlayerBoardTests: XCTestCase {
             XCTAssertEqual(shouldFailing, error as? PTCGPlayerBoard.PreparePrizeError)
         }
     }
+    
+    func testEntryPokemon() {
+        var playerBoard = PTCGPlayerBoard(deckSet: .init(cards: ExampleDeck))
+        playerBoard.startGame()
+        try! playerBoard.preparePrize()
+        playerBoard.entryPokemon(0)
+        XCTAssertEqual(0, playerBoard.battleActive.battlePokemon?.damagePoint)
+    }
 
     static var allTests = [
         ("testInitializedConfig", testInitializedConfig),

@@ -31,7 +31,15 @@ extension PTCGBattleActiveZone: PTCGZoneConvertible {
     
     public typealias InputRequest = Void
     public mutating func input(_ request: Void, of cards: Array<PTCGZoneUnitConvertible>) {
-        
+        guard let card = cards.first else {
+            return
+        }
+        switch card.switcher {
+        case .battlePokemon(let battlePokemon):
+            self.battlePokemon = battlePokemon
+        case .deckCard(let card):
+            self.battlePokemon = try? .init(with: card)
+        }
     }
     
     public typealias OutputRequest = Void

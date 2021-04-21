@@ -44,6 +44,7 @@ extension PTCGHandsZone: PTCGZoneConvertible {
     
     public enum OutputAction {
         case selectAll
+        case select(index: Int)
     }
     public typealias OutputRequest = OutputAction
     public mutating func output(_ request: OutputRequest) -> Array<PTCGZoneUnitConvertible> {
@@ -52,6 +53,8 @@ extension PTCGHandsZone: PTCGZoneConvertible {
             let cards = self.cards
             self.cards = []
             return cards
+        case .select(let index):
+            return [cards[index]]
         }
     }
 }

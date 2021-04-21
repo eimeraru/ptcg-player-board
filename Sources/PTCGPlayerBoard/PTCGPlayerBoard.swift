@@ -57,17 +57,15 @@ public struct PTCGPlayerBoard: PTCGZoneControllable {
      *  - settingCount: 初期値は1から
      * - Returns: 手札を準備する際に引き直した回数、初回準備のあと回数分を相手にドローさせる
      */
+    @discardableResult
     public mutating func startGame(_ settingCount: Int = 1) -> Int {
-        deck.cards = deckSet.cards.shuffled()
-        let unitSet: Array<PTCGZoneUnitConvertible> = transit(
-            (zone: deck, request: .draw(count: startHandsCount)),
-            to: (zone: hands, request: ()))
-        let basicPokemons = unitSet.compactMap { (unit) -> PTCGPokemonCard? in
-            mapToCard(unit) { $0.evolutionType == .basic }
-        }
+        deck.cards = deckSet.cards
+        shuffle()
+        let deckCards = draw(startHandsCount)
+        let basicPokemons: Array<PTCGPokemonCard> = deckCards.compactMap(
+            toCard(filter: { $0.evolutionType == .basic }))
         guard basicPokemons.count > 0 else {
-            _ = transit((zone: hands, request: .selectAll),
-                        to: (zone: deck, request: ()))
+            returnHands()
             return startGame(settingCount + 1)
         }
         return settingCount
@@ -75,12 +73,13 @@ public struct PTCGPlayerBoard: PTCGZoneControllable {
     
     /** サイドを準備する際に発生するエラー */
     public enum PreparePrizeError: Error {
-        /** デッキの準備が出来てない場合に発生 */
+        /** 山札の準備が出来てない場合に発生 */
         case shouldSettingDeck
         /** 既にゲームが開始している場合に発生 */
         case alreadyStartGame
     }
-    /** サイドに指定枚数のカードをデッキから裏向きに設置する */
+    
+    /** サイドに指定枚数のカードを山札から裏向きに設置する */
     public mutating func preparePrize() throws {
         guard hands.cards.count == startHandsCount else {
             throw PreparePrizeError.shouldSettingDeck
@@ -93,22 +92,49 @@ public struct PTCGPlayerBoard: PTCGZoneControllable {
             to: (zone: prize, request: ()))
     }
     
-    private func mapToCard<T: PTCGCard>(
-        _ unit: PTCGZoneUnitConvertible,
-        filter: (T) -> Bool) -> T?
-    {
-        guard case .deckCard(let card) = unit.switcher else {
-            return nil
+    private func toCard<T: PTCGCard>(filter: @escaping (T) -> Bool) -> (PTCGDeckCard) -> T? {
+        { card in
+            guard let c = card.content as? T, filter(c) else {
+                return nil
+            }
+            return c
         }
-        guard let c = card.content as? T, filter(c) else {
-            return nil
-        }
-        return c
+    }
+    
+    /**
+     * 手札に山札から指定枚数分を引く
+     * - Parameters:
+     *   - count: 引く枚数
+     */
+    public mutating func draw(_ count: Int = 1) -> Array<PTCGDeckCard> {
+        transit((zone: deck, request: .draw(count: count)),
+                to: (zone: hands, request: ())) as? Array<PTCGDeckCard> ?? []
+    }
+    
+    /**
+     * 山札に手札を全て戻す
+     */
+    @discardableResult
+    public mutating func returnHands() -> Array<PTCGDeckCard> {
+        transit((zone: hands, request: .selectAll),
+                to: (zone: deck, request: ())) as? Array<PTCGDeckCard> ?? []
+    }
+    
+    /**
+     * 山札をシャッフルする
+     */
+    public mutating func shuffle() {
+        deck.cards = deck.cards.shuffled()
+    }
+    
+    public mutating func entryPokemon(_ index: Int) {
+        _ = transit((zone: hands, request: .select(index: index)),
+                    to: (zone: battleActive, request: ()))
     }
     
     // MARK: PTCGZoneControllable
     
-    /** デッキ */
+    /** 山札 */
     public var deck         : PTCGDeckZone          = .init()
     /** バトル場 */
     public var battleActive : PTCGBattleActiveZone  = .init()
