@@ -57,7 +57,7 @@ public struct PTCGPlayerBoard: PTCGZoneControllable {
      *  - settingCount: 初期値は1から
      * - Returns: 手札を準備する際に引き直した回数、初回準備のあと回数分を相手にドローさせる
      */
-    public mutating func gameStart(_ settingCount: Int = 1) -> Int {
+    public mutating func startGame(_ settingCount: Int = 1) -> Int {
         deck.cards = deckSet.cards.shuffled()
         let unitSet: Array<PTCGZoneUnitConvertible> = transit(
             (zone: deck, request: .draw(count: startHandsCount)),
@@ -68,7 +68,7 @@ public struct PTCGPlayerBoard: PTCGZoneControllable {
         guard basicPokemons.count > 0 else {
             _ = transit((zone: hands, request: .selectAll),
                         to: (zone: deck, request: ()))
-            return gameStart(settingCount + 1)
+            return startGame(settingCount + 1)
         }
         return settingCount
     }
