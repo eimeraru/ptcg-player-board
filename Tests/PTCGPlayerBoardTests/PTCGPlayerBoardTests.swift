@@ -55,8 +55,37 @@ final class PTCGPlayerBoardTests: XCTestCase {
         try! playerBoard.entryPokemon(0)
         XCTAssertEqual(6, playerBoard.hands.cards.count)
         XCTAssertNotNil(playerBoard.battleActive)
+        XCTAssertEqual(0, playerBoard.battleActive.battlePokemon?.energies.count)
+        XCTAssertEqual(0, playerBoard.battleActive.battlePokemon?.items.count)
     }
     
+    func testAttachEnergy() {
+        var playerBoard = PTCGPlayerBoard(deckSet: .init(cards: ExampleDeck))
+        try! playerBoard.startGame()
+        try! playerBoard.preparePrize()
+        try! playerBoard.entryPokemon(0)
+        let basicEnergy = PTCGDeckCard(
+            with: .init(PTCGBasicEnergyCard(at: .colorLess)), "_")
+        try! playerBoard.battleActive.input(.attachEnergy, of: [basicEnergy])
+        XCTAssertEqual(1, playerBoard.battleActive.battlePokemon?.energies.count)
+        XCTAssertEqual(0, playerBoard.battleActive.battlePokemon?.items.count)
+//        let specialEnergy = PTCGDeckCard(
+//            with: .init(PTCGSpecialEnergyCard()), "_")
+//        XCTAssertEqual(2, playerBoard.battleActive.battlePokemon?.energies.count)
+    }
+    
+    func testAttachItem() {
+        var playerBoard = PTCGPlayerBoard(deckSet: .init(cards: ExampleDeck))
+        try! playerBoard.startGame()
+        try! playerBoard.preparePrize()
+        try! playerBoard.entryPokemon(0)
+        let itemCard = PTCGDeckCard(
+            with: .init(PTCGItemCard(id: "_", name: "タフネスマント", effect: "...")), "_")
+        try! playerBoard.battleActive.input(.attachItem, of: [itemCard])
+        XCTAssertEqual(0, playerBoard.battleActive.battlePokemon?.energies.count)
+        XCTAssertEqual(1, playerBoard.battleActive.battlePokemon?.items.count)
+    }
+
     static var allTests = [
         ("testInitializedConfig", testInitializedConfig),
         ("testGameStart", testGameStart),

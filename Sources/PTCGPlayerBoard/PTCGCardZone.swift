@@ -9,6 +9,12 @@ import PTCGCard
 
 // MARK: PTCGZone
 
+public enum PTCGBattleZoneAction {
+    case entry
+    case attachEnergy
+    case attachItem
+}
+
 /**
  * ポケモンカードゲーム上の置き場の種類ごとのサブタイプを網羅検査する
  */
