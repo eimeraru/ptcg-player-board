@@ -48,12 +48,14 @@ final class PTCGPlayerBoardTests: XCTestCase {
         playerBoard.startGame()
         try! playerBoard.preparePrize()
         playerBoard.entryPokemon(0)
-        XCTAssertEqual(0, playerBoard.battleActive.battlePokemon?.damagePoint)
+        XCTAssertEqual(6, playerBoard.hands.cards.count)
+        XCTAssertNotNil(playerBoard.battleActive)
     }
-
+    
     static var allTests = [
         ("testInitializedConfig", testInitializedConfig),
         ("testGameStart", testGameStart),
         ("testPreparePrize", testPreparePrize),
+        ("testEntryPokemon", testEntryPokemon),
     ]
 }

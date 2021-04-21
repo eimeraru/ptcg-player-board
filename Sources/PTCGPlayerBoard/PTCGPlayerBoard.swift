@@ -112,7 +112,7 @@ public struct PTCGPlayerBoard: PTCGZoneControllable {
     }
     
     /**
-     * 山札に手札を全て戻す
+     * 手札を山札に全て戻す
      */
     @discardableResult
     public mutating func returnHands() -> Array<PTCGDeckCard> {
@@ -127,6 +127,11 @@ public struct PTCGPlayerBoard: PTCGZoneControllable {
         deck.cards = deck.cards.shuffled()
     }
     
+    /**
+     * 手札からバトル場に出す
+     * - Parameters:
+     *   - index: 手札にいるポケモンカード
+     */
     public mutating func entryPokemon(_ index: Int) {
         _ = transit((zone: hands, request: .select(index: index)),
                     to: (zone: battleActive, request: ()))

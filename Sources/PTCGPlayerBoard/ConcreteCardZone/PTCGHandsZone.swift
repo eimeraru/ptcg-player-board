@@ -54,6 +54,7 @@ extension PTCGHandsZone: PTCGZoneConvertible {
             self.cards = []
             return cards
         case .select(let index):
+            self.cards.remove(at: index)
             return [cards[index]]
         }
     }
