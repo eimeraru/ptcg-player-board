@@ -114,7 +114,7 @@ public struct PTCGPlayerBoard: PTCGZoneControllable {
     /**
      * 山札をシャッフルする
      */
-    public mutating func shuffle(_ id: String? = nil) {
+    public mutating func shuffle(_ id: PTCGDeckCardIdentifier? = nil) {
         deck.shuffle(id)
     }
     
@@ -159,10 +159,6 @@ public struct PTCGPlayerBoard: PTCGZoneControllable {
 }
 
 public extension PTCGPlayerBoard {
-    
-    enum Abc {
-        case hoge
-    }
     
     /**
      * カードの挿入位置
