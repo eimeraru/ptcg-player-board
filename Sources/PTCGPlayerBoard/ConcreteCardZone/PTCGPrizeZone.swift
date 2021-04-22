@@ -25,18 +25,25 @@ extension PTCGPrizeZone: PTCGZoneConvertible {
     }
     
     public typealias ReadRequest = Void
-    public func read(_ request: Void) -> Array<PTCGZoneUnitConvertible> {
+    public func read(_ request: ReadRequest) -> Array<PTCGZoneUnitConvertible> {
         all
     }
     
     public typealias InputRequest = Void
-    public mutating func input(_ request: Void, of unitSet: Array<PTCGZoneUnitConvertible>) {
+    public mutating func input(_ request: InputRequest, of unitSet: Array<PTCGZoneUnitConvertible>) {
         let deckCards = unitSet.compactMap(toDeckCards()).flatMap({ $0 })
         self.cards.append(contentsOf: deckCards)
     }
     
-    public typealias OutputRequest = Void
-    public mutating func output(_ request: Void) -> Array<PTCGZoneUnitConvertible> {
-        []
+    public enum OutputAction {
+        case select(index: Int)
+    }
+    public typealias OutputRequest = OutputAction
+    public mutating func output(_ request: OutputRequest) -> Array<PTCGZoneUnitConvertible> {
+        switch request {
+        case .select(let index):
+            cards.remove(at: index)
+            return [cards[index]]
+        }
     }
 }

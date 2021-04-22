@@ -95,8 +95,12 @@ extension PTCGBattleActiveZone: PTCGZoneConvertible {
         }
     }
     
-    public typealias OutputRequest = Void
-    public mutating func output(_ request: Void) throws -> Array<PTCGZoneUnitConvertible> {
+    public enum OutputAction {
+        case selectAll
+        case select(index: Int)
+    }
+    public typealias OutputRequest = OutputAction
+    public mutating func output(_ request: OutputRequest) throws -> Array<PTCGZoneUnitConvertible> {
         []
     }
 }

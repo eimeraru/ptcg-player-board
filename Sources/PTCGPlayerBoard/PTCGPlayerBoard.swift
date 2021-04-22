@@ -103,6 +103,16 @@ public struct PTCGPlayerBoard: PTCGZoneControllable {
     }
     
     /**
+     * 手札にサイドから選択したインデックスのカードを引く
+     * - Parameters:
+     *   - index: サイドから指定するインデックス
+     */
+    public mutating func selectPrize(with index: Int) throws -> Array<PTCGDeckCard> {
+        try transit((zone: prize, request: .select(index: index)),
+                    to: (zone: hands, request: ())) as? Array<PTCGDeckCard> ?? []
+    }
+    
+    /**
      * 手札を山札に全て戻す
      */
     @discardableResult
@@ -144,7 +154,9 @@ public struct PTCGPlayerBoard: PTCGZoneControllable {
     }
     
     /**
-     * xxx
+     * 指定のカード置き場のカード一覧の内容を確認する
+     *   - zone: 内容を確認する指定のカード置き場
+     *   - request: 指定のカード置き場に紐づくカードを確認する
      */
     public func readCards<T: PTCGZoneConvertible>(
         from zone: T, request: T.ReadRequest) -> Array<PTCGZoneUnitConvertible>

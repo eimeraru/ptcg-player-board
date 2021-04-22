@@ -49,6 +49,18 @@ final class PTCGPlayerBoardTests: XCTestCase {
         }
     }
     
+    func testSelectPrize() {
+        do {
+            var playerBoard = PTCGPlayerBoard(deckSet: .init(cards: ExampleDeck))
+            try playerBoard.startGame(shuffleId: testingId)
+            try playerBoard.preparePrize()
+            _ = try playerBoard.selectPrize(with: 0)
+            XCTAssertEqual(5, playerBoard.prize.cards.count)
+        } catch {
+            XCTFail()
+        }
+    }
+    
     func testEntryActiveZone() {
         do {
             var playerBoard = PTCGPlayerBoard(deckSet: .init(cards: ExampleDeck))
