@@ -75,12 +75,12 @@ extension PTCGBattleActiveZone: PTCGZoneConvertible {
     }
     
     public var all: Array<PTCGZoneUnitConvertible> {
-        []
+        battlePokemon.map { [$0] } ?? []
     }
     
     public typealias ReadRequest = Void
     public func read(_ request: Void) -> Array<PTCGZoneUnitConvertible> {
-        []
+        all
     }
     
     public typealias InputRequest = (PTCGBattleZoneAction)

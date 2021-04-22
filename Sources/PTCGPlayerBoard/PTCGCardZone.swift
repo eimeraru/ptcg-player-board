@@ -55,6 +55,12 @@ public protocol PTCGZoneConvertible {
 
 extension PTCGZoneControllable {
 
+    func read<T: PTCGZoneConvertible>(
+        zone: T, request: T.ReadRequest) -> Array<PTCGZoneUnitConvertible>
+    {
+        zone.all
+    }
+    
     mutating func transit<T: PTCGZoneConvertible, S: PTCGZoneConvertible>
     (
         _ lhs: (zone: T, request: T.OutputRequest),

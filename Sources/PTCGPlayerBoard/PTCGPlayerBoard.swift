@@ -119,9 +119,10 @@ public struct PTCGPlayerBoard: PTCGZoneControllable {
     }
     
     /**
-     * 手札からバトル場にバトルポケモンとして扱えるカードを出す
+     * 指定のカード置き場からバトル場にバトルポケモンとして扱えるカードを出す
      * - Parameters:
-     *   - indexInHands: 手札にいるポケモンカード
+     *   - zone: バトル場にカードを出す指定の置き場 (e.g. 手札 / 山札)
+     *   - request: 指定のカード置き場に紐づくカードを出す操作
      */
     public mutating func entryActivePokemon<T: PTCGZoneConvertible>(
         from zone: T, request: T.OutputRequest) throws
@@ -131,13 +132,24 @@ public struct PTCGPlayerBoard: PTCGZoneControllable {
     }
     
     /**
-     * 手札からベンチにバトルポケモンとして扱えるカードを出す
+     * 指定のカード置き場からベンチにバトルポケモンとして扱えるカードを出す
+     *   - zone: ベンチにカードを出す指定の置き場 (e.g. 手札 / 山札)
+     *   - request: 指定のカード置き場に紐づくカードを出す操作
      */
     public mutating func entryBenchPokemon<T: PTCGZoneConvertible>(
         from zone: T, request: T.OutputRequest) throws
     {
         _ = try transit((zone: zone, request: request),
                         to: (zone: battleBench, request: (.entry, nil)))
+    }
+    
+    /**
+     * xxx
+     */
+    public func readCards<T: PTCGZoneConvertible>(
+        from zone: T, request: T.ReadRequest) -> Array<PTCGZoneUnitConvertible>
+    {
+        read(zone: zone, request: request)
     }
     
     // MARK: PTCGZoneControllable

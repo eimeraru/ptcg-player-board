@@ -26,21 +26,21 @@ final class PTCGPlayerBoardTests: XCTestCase {
     
     func testPreparePrize() {
         var playerBoard = PTCGPlayerBoard(deckSet: .init(cards: ExampleDeck))
-        try! playerBoard.startGame(shuffleId: testingId)
-        try! playerBoard.preparePrize()
-        XCTAssertEqual(47, playerBoard.deck.cards.count)
-        XCTAssertEqual(7, playerBoard.hands.cards.count)
-        XCTAssertEqual(6, playerBoard.prize.cards.count)
-        playerBoard = PTCGPlayerBoard(deckSet: .init(cards: ExampleDeck))
         do {
+            try playerBoard.startGame(shuffleId: testingId)
+            try playerBoard.preparePrize()
+            XCTAssertEqual(47, playerBoard.deck.cards.count)
+            XCTAssertEqual(7, playerBoard.hands.cards.count)
+            XCTAssertEqual(6, playerBoard.prize.cards.count)
+            playerBoard = PTCGPlayerBoard(deckSet: .init(cards: ExampleDeck))
             try playerBoard.preparePrize()
         } catch {
             let shouldFailing = PTCGPlayerBoard.PreparePrizeError.shouldSettingDeck
             XCTAssertEqual(shouldFailing, error as? PTCGPlayerBoard.PreparePrizeError)
         }
         playerBoard = PTCGPlayerBoard(deckSet: .init(cards: ExampleDeck))
-        try! playerBoard.startGame(shuffleId: testingId)
         do {
+            try playerBoard.startGame(shuffleId: testingId)
             try playerBoard.preparePrize()
             try playerBoard.preparePrize()
         } catch {
@@ -50,60 +50,102 @@ final class PTCGPlayerBoardTests: XCTestCase {
     }
     
     func testEntryActiveZone() {
-        var playerBoard = PTCGPlayerBoard(deckSet: .init(cards: ExampleDeck))
-        try! playerBoard.startGame(shuffleId: testingId)
-        try! playerBoard.preparePrize()
-        try! playerBoard.entryActivePokemon(from: playerBoard.hands,
-                                            request: .select(index: 0))
-        XCTAssertEqual(6, playerBoard.hands.cards.count)
-        XCTAssertNotNil(playerBoard.battleActive)
-        XCTAssertEqual(0, playerBoard.battleActive.battlePokemon?.energies.count)
-        XCTAssertEqual(0, playerBoard.battleActive.battlePokemon?.tools.count)
+        do {
+            var playerBoard = PTCGPlayerBoard(deckSet: .init(cards: ExampleDeck))
+            try playerBoard.startGame(shuffleId: testingId)
+            try playerBoard.preparePrize()
+            try playerBoard.entryActivePokemon(from: playerBoard.hands,
+                                                request: .select(index: 0))
+            XCTAssertEqual(6, playerBoard.hands.cards.count)
+            XCTAssertNotNil(playerBoard.battleActive)
+            XCTAssertEqual(0, playerBoard.battleActive.battlePokemon?.energies.count)
+            XCTAssertEqual(0, playerBoard.battleActive.battlePokemon?.tools.count)
+        } catch {
+            XCTFail()
+        }
     }
     
     func testEntryBenchZone() {
-        var playerBoard = PTCGPlayerBoard(deckSet: .init(cards: ExampleDeck))
-        try! playerBoard.startGame(shuffleId: testingId)
-        try! playerBoard.preparePrize()
-        try! playerBoard.entryBenchPokemon(from: playerBoard.hands,
-                                           request: .select(index: 0))
-        XCTAssertEqual(6, playerBoard.hands.cards.count)
-        XCTAssertNil(playerBoard.battleActive.battlePokemon)
-        XCTAssertNotEqual(playerBoard.battleBench.battlePokemons, [])
-        XCTAssertEqual(0, playerBoard.battleBench.battlePokemons[0].energies.count)
-        XCTAssertEqual(0, playerBoard.battleBench.battlePokemons[0].tools.count)
+        do {
+            var playerBoard = PTCGPlayerBoard(deckSet: .init(cards: ExampleDeck))
+            try playerBoard.startGame(shuffleId: testingId)
+            try playerBoard.preparePrize()
+            try playerBoard.entryBenchPokemon(from: playerBoard.hands,
+                                               request: .select(index: 0))
+            XCTAssertEqual(6, playerBoard.hands.cards.count)
+            XCTAssertNil(playerBoard.battleActive.battlePokemon)
+            XCTAssertNotEqual(playerBoard.battleBench.battlePokemons, [])
+            XCTAssertEqual(0, playerBoard.battleBench.battlePokemons[0].energies.count)
+            XCTAssertEqual(0, playerBoard.battleBench.battlePokemons[0].tools.count)
+        } catch {
+            XCTFail()
+        }
     }
     
     func testAttachEnergy() {
-        var playerBoard = PTCGPlayerBoard(deckSet: .init(cards: ExampleDeck))
-        try! playerBoard.startGame(shuffleId: testingId)
-        try! playerBoard.preparePrize()
-        try! playerBoard.entryActivePokemon(from: playerBoard.hands, request: .select(index: 0))
-        let basicEnergy = PTCGDeckCard(
-            with: .init(PTCGBasicEnergyCard(at: .colorLess)), "_")
-        try! playerBoard.battleActive.input(.attachEnergy, of: [basicEnergy])
-        XCTAssertEqual(1, playerBoard.battleActive.battlePokemon?.energies.count)
-        XCTAssertEqual(0, playerBoard.battleActive.battlePokemon?.tools.count)
-        let specialEnergy = PTCGDeckCard(
-            with: .init(PTCGSpecialEnergyCard(
-                            id: "_",
-                            name: "トリプル加速エネルギー",
-                            energies: [.colorLess, .colorLess, .colorLess],
-                            capacity: 3)), "_")
-        try! playerBoard.battleActive.input(.attachEnergy, of: [specialEnergy])
-        XCTAssertEqual(2, playerBoard.battleActive.battlePokemon?.energies.count)
+        do {
+            var playerBoard = PTCGPlayerBoard(deckSet: .init(cards: ExampleDeck))
+            try playerBoard.startGame(shuffleId: testingId)
+            try playerBoard.preparePrize()
+            try playerBoard.entryActivePokemon(from: playerBoard.hands, request: .select(index: 0))
+            let basicEnergy = PTCGDeckCard(
+                with: .init(PTCGBasicEnergyCard(at: .colorLess)), "_")
+            try playerBoard.battleActive.input(.attachEnergy, of: [basicEnergy])
+            XCTAssertEqual(1, playerBoard.battleActive.battlePokemon?.energies.count)
+            XCTAssertEqual(0, playerBoard.battleActive.battlePokemon?.tools.count)
+            let specialEnergy = PTCGDeckCard(
+                with: .init(PTCGSpecialEnergyCard(
+                                id: "_",
+                                name: "トリプル加速エネルギー",
+                                energies: [.colorLess, .colorLess, .colorLess],
+                                capacity: 3)), "_")
+            try playerBoard.battleActive.input(.attachEnergy, of: [specialEnergy])
+            XCTAssertEqual(2, playerBoard.battleActive.battlePokemon?.energies.count)
+        } catch {
+            XCTFail()
+        }
     }
     
     func testAttachTool() {
-        var playerBoard = PTCGPlayerBoard(deckSet: .init(cards: ExampleDeck))
-        try! playerBoard.startGame(shuffleId: testingId)
-        try! playerBoard.preparePrize()
-        try! playerBoard.entryActivePokemon(from: playerBoard.hands, request: .select(index: 0))
-        let toolCard = PTCGDeckCard(
-            with: .init(PTCGPokemonToolCard(id: "_", name: "タフネスマント", effect: "...")), "_")
-        try! playerBoard.battleActive.input(.attachTool, of: [toolCard])
-        XCTAssertEqual(0, playerBoard.battleActive.battlePokemon?.energies.count)
-        XCTAssertEqual(1, playerBoard.battleActive.battlePokemon?.tools.count)
+        do {
+            var playerBoard = PTCGPlayerBoard(deckSet: .init(cards: ExampleDeck))
+            try playerBoard.startGame(shuffleId: testingId)
+            try playerBoard.preparePrize()
+            try playerBoard.entryActivePokemon(from: playerBoard.hands, request: .select(index: 0))
+            let toolCard = PTCGDeckCard(
+                with: .init(PTCGPokemonToolCard(id: "_", name: "タフネスマント", effect: "...")), "_")
+            try! playerBoard.battleActive.input(.attachTool, of: [toolCard])
+            XCTAssertEqual(0, playerBoard.battleActive.battlePokemon?.energies.count)
+            XCTAssertEqual(1, playerBoard.battleActive.battlePokemon?.tools.count)
+        } catch {
+            XCTFail()
+        }
+    }
+    
+    func testReadCards() {
+        do {
+            var playerBoard = PTCGPlayerBoard(deckSet: .init(cards: ExampleDeck))
+            try playerBoard.startGame(shuffleId: testingId)
+            try playerBoard.preparePrize()
+            try playerBoard.entryActivePokemon(from: playerBoard.hands,
+                                                request: .select(index: 0))
+            XCTAssertEqual(1, playerBoard.read(zone: playerBoard.battleActive,
+                                               request: ()).count)
+            XCTAssertEqual(0, playerBoard.read(zone: playerBoard.battleBench,
+                                               request: ()).count)
+            XCTAssertEqual(47, playerBoard.read(zone: playerBoard.deck,
+                                                request: ()).count)
+            XCTAssertEqual(0, playerBoard.read(zone: playerBoard.discardPile,
+                                               request: ()).count)
+            XCTAssertEqual(6, playerBoard.read(zone: playerBoard.hands,
+                                               request: ()).count)
+            XCTAssertEqual(6, playerBoard.read(zone: playerBoard.prize,
+                                               request: ()).count)
+            XCTAssertEqual(0, playerBoard.read(zone: playerBoard.stadium,
+                                               request: ()).count)
+        } catch {
+            XCTFail()
+        }
     }
 
     static var allTests = [
@@ -113,5 +155,6 @@ final class PTCGPlayerBoardTests: XCTestCase {
         ("testEntryActiveZone", testEntryActiveZone),
         ("testAttachEnergy", testAttachEnergy),
         ("testAttachTool", testAttachTool),
+        ("testReadCards", testReadCards),
     ]
 }

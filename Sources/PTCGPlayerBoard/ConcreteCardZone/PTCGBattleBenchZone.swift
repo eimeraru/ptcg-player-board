@@ -21,12 +21,12 @@ extension PTCGBattleBenchZone: PTCGZoneConvertible {
     }
     
     public var all: Array<PTCGZoneUnitConvertible> {
-        []
+        battlePokemons
     }
     
     public typealias ReadRequest = Void
     public func read(_ request: Void) -> Array<PTCGZoneUnitConvertible> {
-        []
+        all
     }
     
     public enum InputRequestOption {

@@ -47,12 +47,12 @@ extension PTCGDeckZone: PTCGZoneConvertible {
     }
     
     public var all: Array<PTCGZoneUnitConvertible> {
-        []
+        cards
     }
     
     public typealias ReadRequest = Void
     public func read(_ request: Void) -> Array<PTCGZoneUnitConvertible> {
-        []
+        all
     }
     
     public typealias InputRequest = Void
