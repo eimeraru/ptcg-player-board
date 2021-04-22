@@ -8,13 +8,6 @@
 import PTCGCard
 
 // MARK: PTCGZone
-
-public enum PTCGBattleZoneAction {
-    case entry
-    case attachEnergy
-    case attachItem
-}
-
 /**
  * ポケモンカードゲーム上の置き場の種類ごとのサブタイプを網羅検査する
  */
@@ -54,7 +47,7 @@ public protocol PTCGZoneConvertible {
     func read(_ request: ReadRequest) -> Array<PTCGZoneUnitConvertible>
     
     associatedtype InputRequest
-    mutating func input(_ request: InputRequest, of cards: Array<PTCGZoneUnitConvertible>) throws
+    mutating func input(_ request: InputRequest, of unitSet: Array<PTCGZoneUnitConvertible>) throws
     
     associatedtype OutputRequest
     mutating func output(_ request: OutputRequest) throws -> Array<PTCGZoneUnitConvertible>
@@ -94,6 +87,14 @@ extension PTCGZoneControllable {
             self.hands = zone
         }
     }
+}
+
+// MARK: PTCGBattleZone
+
+public enum PTCGBattleZoneAction {
+    case entry
+    case attachEnergy
+    case attachTool
 }
 
 // MARK: PTCGZoneUnit

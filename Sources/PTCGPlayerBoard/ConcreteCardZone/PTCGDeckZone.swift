@@ -56,7 +56,7 @@ extension PTCGDeckZone: PTCGZoneConvertible {
     }
     
     public typealias InputRequest = Void
-    public mutating func input(_ request: Void, of cards: Array<PTCGZoneUnitConvertible>) throws {
+    public mutating func input(_ request: Void, of unitSet: Array<PTCGZoneUnitConvertible>) throws {
         
     }
     

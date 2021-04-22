@@ -30,16 +30,8 @@ extension PTCGHandsZone: PTCGZoneConvertible {
     }
     
     public typealias InputRequest = Void
-    public mutating func input(_ request: Void, of cards: Array<PTCGZoneUnitConvertible>) throws {
-        let deckCards = cards.map { (card) -> Array<PTCGDeckCard> in
-            switch card.switcher {
-            case .deckCard(let unit):
-                return [unit]
-            case .battlePokemon(let unit):
-                return unit.evolutionTree + unit.items + unit.energies
-            }
-        }.flatMap { $0 }
-        self.cards.append(contentsOf: deckCards)
+    public mutating func input(_ request: Void, of unitSet: Array<PTCGZoneUnitConvertible>) throws {
+        self.cards.append(contentsOf: unitSet.compactMap(toDeckCard()))
     }
     
     public enum OutputAction {

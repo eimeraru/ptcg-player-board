@@ -59,7 +59,7 @@ public struct PTCGBattlePokemon {
     /**
      * 所有している「ポケモンのどうぐ」
      */
-    public var items: Array<PTCGDeckCard>
+    public var tools: Array<PTCGDeckCard>
     
     /**
      * 技を使うのに必要となるエネルギーカード
@@ -81,7 +81,7 @@ public struct PTCGBattlePokemon {
         }
         self.evolutionTree = [battleCard]
         self.damagePoint = 0
-        self.items = []
+        self.tools = []
         self.energies = []
         self.specialConditions = .init()
     }

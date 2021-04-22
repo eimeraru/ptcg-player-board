@@ -29,9 +29,23 @@ extension PTCGBattleBenchZone: PTCGZoneConvertible {
         []
     }
     
-    public typealias InputRequest = Void
-    public mutating func input(_ request: Void, of cards: Array<PTCGZoneUnitConvertible>) throws {
-        
+    public enum InputRequestOption {
+        case select(Int)
+    }
+    public typealias InputRequest = (action: PTCGBattleZoneAction, option: InputRequestOption?)
+    public mutating func input(_ request: InputRequest, of unitSet: Array<PTCGZoneUnitConvertible>) throws {
+        switch (request.action, request.option) {
+        case (.entry, nil):
+            battlePokemons.append(contentsOf: unitSet.compactMap(toBattlePokemon()))
+        case (.attachTool, .select(let index)?):
+            battlePokemons[index].energies
+                .append(contentsOf: unitSet.compactMap(toPokemonToolDeckCard))
+        case (.attachEnergy, .select(let index)?):
+            battlePokemons[index].energies
+                .append(contentsOf: unitSet.compactMap(toEnergyDeckCard))
+        default:
+            break
+        }
     }
     
     public typealias OutputRequest = Void

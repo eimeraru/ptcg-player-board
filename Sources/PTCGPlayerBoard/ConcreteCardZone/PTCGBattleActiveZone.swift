@@ -61,51 +61,10 @@ public struct PTCGBattleActiveZone {
     public init() {}
     
     public mutating func entryPokemon(unitSet: Array<PTCGZoneUnitConvertible>) throws {
-        guard let unit = unitSet.first else {
+        guard let battlePokemon = unitSet.first.flatMap(toBattlePokemon()) else {
             return
         }
-        switch unit.switcher {
-        case .battlePokemon(let battlePokemon):
-            self.battlePokemon = battlePokemon
-        case .deckCard(let card):
-            self.battlePokemon = try .init(with: card)
-        }
-    }
-
-    public mutating func attachEnergy(unitSet: Array<PTCGZoneUnitConvertible>) throws {
-        guard battlePokemon != nil else {
-            return
-        }
-        guard let cards = unitSet as? Array<PTCGDeckCard> else {
-            return
-        }
-        let eneriges: Array<PTCGDeckCard> = cards.filter { (deckCard) -> Bool in
-            switch deckCard.content.switcher {
-            case .basicEnergy, .specialEnergy:
-                return true
-            default:
-                return false
-            }
-        }
-        battlePokemon?.energies.append(contentsOf: eneriges)
-    }
-    
-    public mutating func attachItems(unitSet: Array<PTCGZoneUnitConvertible>) throws {
-        guard battlePokemon != nil else {
-            return
-        }
-        guard let cards = unitSet as? Array<PTCGDeckCard> else {
-            return
-        }
-        let items: Array<PTCGDeckCard> = cards.filter { (deckCard) -> Bool in
-            switch deckCard.content.switcher {
-            case .item:
-                return true
-            default:
-                return false
-            }
-        }
-        battlePokemon?.items.append(contentsOf: items)
+        self.battlePokemon = battlePokemon
     }
 }
 
@@ -124,15 +83,15 @@ extension PTCGBattleActiveZone: PTCGZoneConvertible {
         []
     }
     
-    public typealias InputRequest = PTCGBattleZoneAction
-    public mutating func input(_ request: PTCGBattleZoneAction, of cards: Array<PTCGZoneUnitConvertible>) throws {
+    public typealias InputRequest = (PTCGBattleZoneAction)
+    public mutating func input(_ request: PTCGBattleZoneAction, of unitSet: Array<PTCGZoneUnitConvertible>) throws {
         switch request {
         case .entry:
-            try entryPokemon(unitSet: cards)
+            try entryPokemon(unitSet: unitSet)
         case .attachEnergy:
-            try attachEnergy(unitSet: cards)
-        case .attachItem:
-            try attachItems(unitSet: cards)
+            battlePokemon?.energies.append(contentsOf: unitSet.compactMap(toEnergyDeckCard))
+        case .attachTool:
+            battlePokemon?.tools.append(contentsOf: unitSet.compactMap(toPokemonToolDeckCard))
         }
     }
     

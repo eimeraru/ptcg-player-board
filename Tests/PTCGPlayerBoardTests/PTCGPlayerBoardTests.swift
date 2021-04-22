@@ -49,27 +49,41 @@ final class PTCGPlayerBoardTests: XCTestCase {
         }
     }
     
-    func testEntryPokemon() {
+    func testEntryActiveZone() {
         var playerBoard = PTCGPlayerBoard(deckSet: .init(cards: ExampleDeck))
-        try! playerBoard.startGame()
+        try! playerBoard.startGame(shuffleId: testingId)
         try! playerBoard.preparePrize()
-        try! playerBoard.entryPokemon(0)
+        try! playerBoard.entryActivePokemon(from: playerBoard.hands,
+                                            request: .select(index: 0))
         XCTAssertEqual(6, playerBoard.hands.cards.count)
         XCTAssertNotNil(playerBoard.battleActive)
         XCTAssertEqual(0, playerBoard.battleActive.battlePokemon?.energies.count)
-        XCTAssertEqual(0, playerBoard.battleActive.battlePokemon?.items.count)
+        XCTAssertEqual(0, playerBoard.battleActive.battlePokemon?.tools.count)
+    }
+    
+    func testEntryBenchZone() {
+        var playerBoard = PTCGPlayerBoard(deckSet: .init(cards: ExampleDeck))
+        try! playerBoard.startGame(shuffleId: testingId)
+        try! playerBoard.preparePrize()
+        try! playerBoard.entryBenchPokemon(from: playerBoard.hands,
+                                           request: .select(index: 0))
+        XCTAssertEqual(6, playerBoard.hands.cards.count)
+        XCTAssertNil(playerBoard.battleActive.battlePokemon)
+        XCTAssertNotEqual(playerBoard.battleBench.battlePokemons, [])
+        XCTAssertEqual(0, playerBoard.battleBench.battlePokemons[0].energies.count)
+        XCTAssertEqual(0, playerBoard.battleBench.battlePokemons[0].tools.count)
     }
     
     func testAttachEnergy() {
         var playerBoard = PTCGPlayerBoard(deckSet: .init(cards: ExampleDeck))
-        try! playerBoard.startGame()
+        try! playerBoard.startGame(shuffleId: testingId)
         try! playerBoard.preparePrize()
-        try! playerBoard.entryPokemon(0)
+        try! playerBoard.entryActivePokemon(from: playerBoard.hands, request: .select(index: 0))
         let basicEnergy = PTCGDeckCard(
             with: .init(PTCGBasicEnergyCard(at: .colorLess)), "_")
         try! playerBoard.battleActive.input(.attachEnergy, of: [basicEnergy])
         XCTAssertEqual(1, playerBoard.battleActive.battlePokemon?.energies.count)
-        XCTAssertEqual(0, playerBoard.battleActive.battlePokemon?.items.count)
+        XCTAssertEqual(0, playerBoard.battleActive.battlePokemon?.tools.count)
         let specialEnergy = PTCGDeckCard(
             with: .init(PTCGSpecialEnergyCard(
                             id: "_",
@@ -80,22 +94,24 @@ final class PTCGPlayerBoardTests: XCTestCase {
         XCTAssertEqual(2, playerBoard.battleActive.battlePokemon?.energies.count)
     }
     
-    func testAttachItem() {
+    func testAttachTool() {
         var playerBoard = PTCGPlayerBoard(deckSet: .init(cards: ExampleDeck))
-        try! playerBoard.startGame()
+        try! playerBoard.startGame(shuffleId: testingId)
         try! playerBoard.preparePrize()
-        try! playerBoard.entryPokemon(0)
-        let itemCard = PTCGDeckCard(
-            with: .init(PTCGItemCard(id: "_", name: "タフネスマント", effect: "...")), "_")
-        try! playerBoard.battleActive.input(.attachItem, of: [itemCard])
+        try! playerBoard.entryActivePokemon(from: playerBoard.hands, request: .select(index: 0))
+        let toolCard = PTCGDeckCard(
+            with: .init(PTCGPokemonToolCard(id: "_", name: "タフネスマント", effect: "...")), "_")
+        try! playerBoard.battleActive.input(.attachTool, of: [toolCard])
         XCTAssertEqual(0, playerBoard.battleActive.battlePokemon?.energies.count)
-        XCTAssertEqual(1, playerBoard.battleActive.battlePokemon?.items.count)
+        XCTAssertEqual(1, playerBoard.battleActive.battlePokemon?.tools.count)
     }
 
     static var allTests = [
         ("testInitializedConfig", testInitializedConfig),
         ("testGameStart", testGameStart),
         ("testPreparePrize", testPreparePrize),
-        ("testEntryPokemon", testEntryPokemon),
+        ("testEntryActiveZone", testEntryActiveZone),
+        ("testAttachEnergy", testAttachEnergy),
+        ("testAttachTool", testAttachTool),
     ]
 }
