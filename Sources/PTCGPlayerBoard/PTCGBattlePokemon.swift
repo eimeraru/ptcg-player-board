@@ -105,68 +105,6 @@ public struct PTCGBattlePokemon {
     }
 }
 
-//extension PTCGBattlePokemon: ZoneConvertible {
-//
-//    public var all: Array<ZoneUnitConvertible> {
-//        let items = self.items
-//        let energies = self.energies
-//        return evolutionTree + items + energies
-//    }
-//
-//    public typealias ReadRequest = ReadAction
-//    public enum ReadAction {
-//        case energy
-//        case item
-//        case battle
-//    }
-//    public func read(_ request: ReadAction) -> Array<ZoneUnitConvertible> {
-//        switch request {
-//        case .energy:
-//            return energies
-//        case .item:
-//            return items
-//        case .battle:
-//            return evolutionTree
-//        }
-//    }
-//
-//    public typealias InputRequest = InputAction
-//    public enum InputAction {
-//        case attachItem(PTCGDeckCard)
-//        case attachEnergy(PTCGDeckCard)
-//        case evolve(PTCGDeckCard)
-//    }
-//    public mutating func input(_ request: InputAction, of cards: Array<ZoneUnitConvertible>) {
-//        switch request {
-//        case .attachEnergy:
-//            energies.append(contentsOf: cards as? Array<PTCGDeckCard> ?? [])
-//        case .attachItem:
-//            items.append(contentsOf: cards as? Array<PTCGDeckCard> ?? [])
-//        case .evolve:
-//            evolutionTree.append(contentsOf: cards as? Array<PTCGDeckCard> ?? [])
-//        }
-//    }
-//
-//    public typealias OutputRequest = OutputAction
-//    public enum OutputAction {
-//        case detachItem(Int)
-//        case detachEnergy(Int)
-//        case degeneration
-//    }
-//    public mutating func output(_ request: OutputAction) -> Array<ZoneUnitConvertible> {
-//        switch request {
-//        case .detachItem(let index):
-//            return [self.items[index]]
-//        case .detachEnergy(let index):
-//            return [self.energies[index]]
-//        case .degeneration:
-//            guard let last = self.evolutionTree.last, evolutionTree.count > 1 else {
-//                return []
-//            }
-//            return [last]
-//        }
-//    }
-//}
 extension PTCGBattlePokemon: Equatable {
 
     public static func ==(lhs: Self, rhs: Self) -> Bool {
