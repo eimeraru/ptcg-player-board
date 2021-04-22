@@ -1,14 +1,5 @@
 import PTCGCard
 
-func toCard<T: PTCGCard>(filter: @escaping (T) -> Bool = { _ in true }) -> (PTCGDeckCard) -> T? {
-    { card in
-        guard let c = card.content as? T, filter(c) else {
-            return nil
-        }
-        return c
-    }
-}
-
 /**
  * ポケモンカードのゲーム開始時に用意する初期手札枚数
  */
