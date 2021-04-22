@@ -167,3 +167,14 @@ public struct PTCGBattlePokemon {
 //        }
 //    }
 //}
+extension PTCGBattlePokemon: Equatable {
+
+    public static func ==(lhs: Self, rhs: Self) -> Bool {
+        lhs.current == rhs.current
+            && lhs.tools == rhs.tools
+            && lhs.energies == rhs.energies
+            && lhs.evolutionTree == rhs.evolutionTree
+            && lhs.damagePoint == rhs.damagePoint
+        // TODO: && lhs.specialConditions == rhs.specialConditions
+    }
+}
