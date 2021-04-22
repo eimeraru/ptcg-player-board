@@ -97,10 +97,17 @@ extension PTCGZoneControllable {
 
 // MARK: PTCGBattleZone
 
-public enum PTCGBattleZoneAction {
+public enum PTCGBattleZoneInputAction {
     case entry
     case attachEnergy
     case attachTool
+}
+
+public enum PTCGBattleZoneOutputAction {
+    case knockOut
+    case degenerate
+    case detachEnergy(index: Int)
+    case detachTool(index: Int)
 }
 
 // MARK: PTCGZoneUnit

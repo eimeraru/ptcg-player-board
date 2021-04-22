@@ -30,6 +30,13 @@ public struct PTCGBattlePokemon {
     public var evolutionTree: Array<PTCGDeckCard>
     
     /**
+     * 技を使うのに必要となるエネルギーカード
+     */
+    public var all: Array<PTCGDeckCard> {
+        evolutionTree + tools + energies
+    }
+    
+    /**
      * バトルポケモンとして重ねて出している一番上のカードを
      * 現在のバトルカードとして扱う
      * (e.g. [ヒトカゲ, リザード, リザードン].last) => リザードン)

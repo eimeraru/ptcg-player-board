@@ -32,7 +32,8 @@ extension PTCGBattleBenchZone: PTCGZoneConvertible {
     public enum InputRequestOption {
         case select(Int)
     }
-    public typealias InputRequest = (action: PTCGBattleZoneAction, option: InputRequestOption?)
+    public typealias InputRequest = (action: PTCGBattleZoneInputAction,
+                                     option: InputRequestOption?)
     public mutating func input(_ request: InputRequest, of unitSet: Array<PTCGZoneUnitConvertible>) throws {
         switch (request.action, request.option) {
         case (.entry, nil):
@@ -48,8 +49,35 @@ extension PTCGBattleBenchZone: PTCGZoneConvertible {
         }
     }
     
-    public typealias OutputRequest = Void
-    public mutating func output(_ request: Void) throws -> Array<PTCGZoneUnitConvertible> {
-        []
+    public enum OutputRequestOption {
+        case select(Int)
+    }
+    public typealias OutputRequest = (action: PTCGBattleZoneOutputAction,
+                                      option: OutputRequestOption?)
+    public mutating func output(_ request: OutputRequest) throws -> Array<PTCGZoneUnitConvertible> {
+        switch (request.action, request.option) {
+        case (.knockOut, .select(let index)?):
+            let all = battlePokemons[index].all
+            battlePokemons.remove(at: index)
+            return all
+        case (.degenerate, .select(let index)):
+            var battlePokemon = battlePokemons[index]
+            guard battlePokemon.evolutionTree.count > 1 else {
+                return []
+            }
+            return [battlePokemon.evolutionTree.removeLast()]
+        case (.detachEnergy(let energyIndex), .select(let pokemonIndex)):
+            var battlePokemon = battlePokemons[pokemonIndex]
+            let energy = battlePokemon.energies[energyIndex]
+            battlePokemon.energies.remove(at: energyIndex)
+            return [energy]
+        case (.detachTool(let toolIndex), .select(let pokemonIndex)):
+            var battlePokemon = battlePokemons[pokemonIndex]
+            let tool = battlePokemon.tools[toolIndex]
+            battlePokemon.tools.remove(at: toolIndex)
+            return [tool]
+        default:
+            return []
+        }
     }
 }

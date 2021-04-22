@@ -83,8 +83,8 @@ extension PTCGBattleActiveZone: PTCGZoneConvertible {
         all
     }
     
-    public typealias InputRequest = (PTCGBattleZoneAction)
-    public mutating func input(_ request: PTCGBattleZoneAction, of unitSet: Array<PTCGZoneUnitConvertible>) throws {
+    public typealias InputRequest = (PTCGBattleZoneInputAction)
+    public mutating func input(_ request: PTCGBattleZoneInputAction, of unitSet: Array<PTCGZoneUnitConvertible>) throws {
         switch request {
         case .entry:
             try entryPokemon(unitSet: unitSet)
@@ -95,12 +95,47 @@ extension PTCGBattleActiveZone: PTCGZoneConvertible {
         }
     }
     
-    public enum OutputAction {
-        case selectAll
-        case select(index: Int)
-    }
-    public typealias OutputRequest = OutputAction
+    public typealias OutputRequest = PTCGBattleZoneOutputAction
     public mutating func output(_ request: OutputRequest) throws -> Array<PTCGZoneUnitConvertible> {
-        []
+        switch request {
+        case .knockOut:
+            guard let pokemon = battlePokemon else {
+                return []
+            }
+            battlePokemon?.evolutionTree = []
+            battlePokemon?.energies = []
+            battlePokemon?.tools = []
+            return pokemon.all
+        case .degenerate:
+            guard let pokemon = battlePokemon else {
+                return []
+            }
+            guard pokemon.evolutionTree.count > 1 else {
+                return []
+            }
+            guard let last = pokemon.evolutionTree.last else {
+                return []
+            }
+            self.battlePokemon?.evolutionTree.removeLast()
+            return [last]
+        case .detachEnergy(let index):
+            guard let pokemon = battlePokemon else {
+                return []
+            }
+            guard pokemon.energies.count > 0 else {
+                return []
+            }
+            self.battlePokemon?.energies.remove(at: index)
+            return [pokemon.energies[index]]
+        case .detachTool(let index):
+            guard let pokemon = battlePokemon else {
+                return []
+            }
+            guard pokemon.energies.count > 0 else {
+                return []
+            }
+            self.battlePokemon?.energies.remove(at: index)
+            return [pokemon.tools[index]]
+        }
     }
 }
