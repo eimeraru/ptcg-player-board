@@ -9,9 +9,35 @@ import Foundation
 
 public struct PTCGDeckZone {
     
-    var cards: Array<PTCGDeckCard> = []
+    var cards: Array<PTCGDeckCard> = [] {
+        willSet {
+            self.cardStorage = newValue.reduce(into: Dictionary<String, PTCGDeckCard>()) { (result, card) in
+                result[card.identifier] = card
+            }
+        }
+    }
+    private var cardStorage: Dictionary<String, PTCGDeckCard> = [:]
     
     public init() {}
+
+    /**
+     * 山札をシャッフルする
+     */
+    public mutating func shuffle(_ id: String? = nil) {
+        guard let id = id else {
+            cards = cards.shuffled()
+            return
+        }
+        let sortedIdSet = id.map(String.init).sorted()
+        let sortedCardIdSet = cards.map({ $0.identifier }).sorted()
+        guard sortedIdSet == sortedCardIdSet else {
+            cards = cards.shuffled()
+            return
+        }
+        cards = id.compactMap { (c) in
+            cardStorage[String(c)]
+        }
+    }
 }
 
 extension PTCGDeckZone: PTCGZoneConvertible {
@@ -42,6 +68,9 @@ extension PTCGDeckZone: PTCGZoneConvertible {
         switch request {
         case .draw(count: let count):
             let cards = Array(self.cards[0 ..< count])
+            cards.forEach { (card) in
+                cardStorage[card.identifier] = nil
+            }
             self.cards.removeSubrange(0 ..< count)
             return cards
         }

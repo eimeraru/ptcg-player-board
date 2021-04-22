@@ -4,6 +4,8 @@ import PTCGCard
 
 final class PTCGPlayerBoardTests: XCTestCase {
     
+    let testingId: String = PTCGDeckCardIdentifierSet[0 ..< 60].joined()
+    
     func testInitializedConfig() {
         let playerBoard = PTCGPlayerBoard(deckSet: .init(cards: ExampleDeck))
         XCTAssertEqual(7, playerBoard.startHandsCount)
@@ -14,7 +16,7 @@ final class PTCGPlayerBoardTests: XCTestCase {
     func testGameStart() {
         do {
             var playerBoard = PTCGPlayerBoard(deckSet: .init(cards: ExampleDeck))
-            try playerBoard.startGame()
+            try playerBoard.startGame(shuffleId: testingId)
             XCTAssertEqual(53, playerBoard.deck.cards.count)
             XCTAssertEqual(7, playerBoard.hands.cards.count)
         } catch {
@@ -23,9 +25,8 @@ final class PTCGPlayerBoardTests: XCTestCase {
     }
     
     func testPreparePrize() {
-        
         var playerBoard = PTCGPlayerBoard(deckSet: .init(cards: ExampleDeck))
-        try! playerBoard.startGame()
+        try! playerBoard.startGame(shuffleId: testingId)
         try! playerBoard.preparePrize()
         XCTAssertEqual(47, playerBoard.deck.cards.count)
         XCTAssertEqual(7, playerBoard.hands.cards.count)
@@ -38,7 +39,7 @@ final class PTCGPlayerBoardTests: XCTestCase {
             XCTAssertEqual(shouldFailing, error as? PTCGPlayerBoard.PreparePrizeError)
         }
         playerBoard = PTCGPlayerBoard(deckSet: .init(cards: ExampleDeck))
-        try! playerBoard.startGame()
+        try! playerBoard.startGame(shuffleId: testingId)
         do {
             try playerBoard.preparePrize()
             try playerBoard.preparePrize()

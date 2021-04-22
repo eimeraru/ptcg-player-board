@@ -58,9 +58,9 @@ public struct PTCGPlayerBoard: PTCGZoneControllable {
      * - Returns: 手札を準備する際に引き直した回数、初回準備のあと回数分を相手にドローさせる
      */
     @discardableResult
-    public mutating func startGame(_ settingCount: Int = 1) throws -> Int {
+    public mutating func startGame(_ settingCount: Int = 1, shuffleId: String? = nil) throws -> Int {
         deck.cards = deckSet.cards
-        shuffle()
+        shuffle(shuffleId)
         let drawed = try draw(startHandsCount)
         let basicPokemons: Array<PTCGPokemonCard> = drawed.compactMap(
             toCard(filter: { $0.evolutionType == .basic }))
@@ -114,8 +114,8 @@ public struct PTCGPlayerBoard: PTCGZoneControllable {
     /**
      * 山札をシャッフルする
      */
-    public mutating func shuffle() {
-        deck.cards = deck.cards.shuffled()
+    public mutating func shuffle(_ id: String? = nil) {
+        deck.shuffle(id)
     }
     
     /**

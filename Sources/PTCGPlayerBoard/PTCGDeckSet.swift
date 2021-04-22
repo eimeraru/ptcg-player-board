@@ -9,7 +9,7 @@ import Foundation
 import PTCGCard
 
 public typealias PTCGDeckCardIdentifier = String
-private let PTCGDeckCardIdentifierSet = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
+internal let PTCGDeckCardIdentifierSet = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
     .map(PTCGDeckCardIdentifier.init)
 
 public struct PTCGDeckSet {
