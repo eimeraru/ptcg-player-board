@@ -17,7 +17,7 @@ let package = Package(
                  from: "0.0.10"),
         .package(name: "PTCGSpecialConditions",
                  url: "https://github.com/evdwarf/ptcg-special-conditions",
-                 from: "0.0.4"),
+                 from: "0.0.5"),
     ],
     targets: [
         .target(

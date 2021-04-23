@@ -120,6 +120,6 @@ extension PTCGBattlePokemon: Equatable {
             && lhs.energies == rhs.energies
             && lhs.evolutionTree == rhs.evolutionTree
             && lhs.damagePoint == rhs.damagePoint
-        // TODO: && lhs.specialConditions == rhs.specialConditions
+            && lhs.specialConditions == rhs.specialConditions
     }
 }
