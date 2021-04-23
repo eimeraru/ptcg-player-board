@@ -124,8 +124,8 @@ final class PTCGPlayerBoardTests: XCTestCase {
             try playerBoard.startGame(shuffleId: testingId)
             try playerBoard.preparePrize()
             try playerBoard.entryActivePokemon(from: playerBoard.hands, request: .select(index: 0))
-            let toolCard = PTCGDeckCard(
-                with: .init(PTCGPokemonToolCard(id: "_", name: "タフネスマント", effect: "...")), "_")
+            let tool = PTCGPokemonToolCard(id: "_", name: "タフネスマント", effect: "...")
+            let toolCard = PTCGDeckCard(with: .init(tool), "_")
             try! playerBoard.battleActive.input(.attachTool, of: [toolCard])
             XCTAssertEqual(0, playerBoard.battleActive.battlePokemon?.energies.count)
             XCTAssertEqual(1, playerBoard.battleActive.battlePokemon?.tools.count)
